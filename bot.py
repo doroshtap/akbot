@@ -331,7 +331,7 @@ async def echo_message(msg: types.Message):
         await bot.send_photo(chat_id=msg.chat.id, photo=photo,caption=fix_str('<b>Профиль:</b>\n')+fix_str('<b>💼Ранг - ')+rank+fix_str('</b>\n<b>💰Заработано - ')+
                              profit+fix_str(' ₽ </b>\n<b>🏙Город - ')+city+fix_str('</b>\n<b>🔴Рефералка - ')+referalka+'</b>')
      if msg.text == fix_str('✉️Чаты✉️'):
-        await msg.answer(fix_str('<b>Выплаты: </b>')) +str(config.channel_viplot)+fix_str('\n<b>Чат: </b>') + config.chat_workerov_link)
+        await msg.answer(fix_str('<b>Выплаты: </b>') +str(config.channel_viplot)+fix_str('\n<b>Чат: </b>') + config.chat_workerov_link)
      if msg.text == fix_str('🏙Сменить Город🏙'):
         await msg.answer(fix_str("Напиши название города:"))
         await New_City.city.set()
@@ -405,10 +405,10 @@ async def zayavki(callback_query: types.CallbackQuery, state: FSMContext):
         elif callback_query.data == 'stata/' + str(users[i]):
             stats =  db.stats(users[i])
             usr =db.Worker_username(users[i])
-            txt = '<b>Статистика переходов</b> @')+usr+':\n'
-            txt += '<b>За день: </b>')+str(stats[0])+'\n'
-            txt+= '<b>За неделю: </b>')+str(stats[1])+'\n'
-            txt +='<b>За месяц: </b>') +str(stats[2])
+            txt = fix_str('<b>Статистика переходов</b> @')+usr+':\n'
+            txt += fix_str('<b>За день: </b>')+str(stats[0])+'\n'
+            txt+= fix_str('<b>За неделю: </b>')+str(stats[1])+'\n'
+            txt +=fix_str('<b>За месяц: </b>') +str(stats[2])
             await bot.send_message(callback_query.from_user.id,text=txt, reply_markup=keyboard.Workers(0,'stata'))
         elif callback_query.data =='zablokirovat/'+str(users[i]):
             db.block(users[i])

